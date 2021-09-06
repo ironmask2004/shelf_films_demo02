@@ -20,7 +20,7 @@ void main(List<String> arguments) async {
     return Response.ok('Hello $param!');
   });
 
-  print('working server try:  curl  kflino.ics.com:8083/films/3 ');
+  print('working server try:  curl  192.168.1.251:8083/films/3 ');
   //await io.serve(app, 'kflino.ics.com', 8083);
   final handler = Pipeline()
       .addMiddleware(logRequests())
@@ -28,5 +28,5 @@ void main(List<String> arguments) async {
       .addMiddleware(handleAuth(secret))
       .addHandler(app);
 
-  await io.serve(handler, 'kflino.ics.com', 8083);
+  await io.serve(handler, '192.168.1.251', 8083);
 }
