@@ -20,7 +20,7 @@ void main(List<String> arguments) async {
     return Response.ok('Hello $param!');
   });
 
-  print('working server try:  curl  kflino.ics.com:8083/films/2 ');
+  print('working server try:  curl  kflino.ics.com:8083/films/3 ');
   //await io.serve(app, 'kflino.ics.com', 8083);
   final handler = Pipeline()
       .addMiddleware(logRequests())
