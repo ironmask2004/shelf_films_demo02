@@ -20,13 +20,14 @@ void main(List<String> arguments) async {
     return Response.ok('Hello $param!');
   });
 
-  print('working server try:  curl  kflino.ics.com:8083/films/2 ');
-  //await io.serve(app, 'kflino.ics.com', 8083);
+  print('working server try:  ');
+  //await io.serve(app, '192.168.0.3, 8083);
   final handler = Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(handleCors())
       .addMiddleware(handleAuth(secret))
       .addHandler(app);
 
-  await io.serve(handler, 'kflino.ics.com', 8083);
+  print (" curl  localhost:8083/films/2");
+  await io.serve(handler, 'localhost', 8083);
 }
