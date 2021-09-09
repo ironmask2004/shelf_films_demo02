@@ -5,59 +5,36 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf.dart';
 
 class CounterApi {
-   int value = 0;
+  int value = 0;
 
   Router get router {
     final router = Router();
-
     router.get('/', (Request request) {
       return Response.ok(value.toString(),
           headers: {'Content-Type': 'application/json'});
     });
 
     router.get('/inc', (Request request) {
-     // final parsedId = int.tryParse(id);
-      value ++;
-      final counter = value;
-    //  data.firstWhere((counter) => counter['id'] == parsedId, orElse: () => null);
-
-      if (counter != null) {
-        return Response.ok(counter.toString());
-      }
-
-      return Response.notFound('Counter not found.');
+      value++;
+      return Response.ok(value.toString(),
+          headers: {'Content-Type': 'application/json'});
     });
     router.get('/dec', (Request request) {
-      // final parsedId = int.tryParse(id);
-      value --;
-      final counter = value;
-      //  data.firstWhere((counter) => counter['id'] == parsedId, orElse: () => null);
+      value--;
 
-      if (counter != null) {
-        return Response.ok(counter.toString());
-      }
-
-      return Response.notFound('Counter not found.');
+      return Response.ok(value.toString());
     });
 
     router.get('/reset', (Request request) {
-      // final parsedId = int.tryParse(id);
-      value =0;
-      final counter = value;
-      //  data.firstWhere((counter) => counter['id'] == parsedId, orElse: () => null);
-
-      if (counter != null) {
-        return Response.ok(counter.toString());
-      }
-
-      return Response.notFound('Counter not found.');
+      value = 0;
+      return Response.ok(value.toString(),
+          headers: {'Content-Type': 'application/json'});
     });
     router.post('/', (Request request) async {
-
       return Response.ok(value.toString(),
           headers: {'Content-Type': 'application/json'});
     });
 
-    return router; //--------//
+    return router;
   }
 }
