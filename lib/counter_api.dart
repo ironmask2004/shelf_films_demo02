@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:convert';
-
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf.dart';
 
@@ -21,7 +19,6 @@ class CounterApi {
     });
     router.get('/dec', (Request request) {
       value--;
-
       return Response.ok(value.toString());
     });
 
@@ -30,11 +27,11 @@ class CounterApi {
       return Response.ok(value.toString(),
           headers: {'Content-Type': 'application/json'});
     });
-    router.post('/', (Request request) async {
-      return Response.ok(value.toString(),
+
+    router.get('/json', (Request request) async {
+      return Response.ok(json.encode("counter:"+value.toString()),
           headers: {'Content-Type': 'application/json'});
     });
-
     return router;
   }
 }
