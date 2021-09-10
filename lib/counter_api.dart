@@ -28,6 +28,18 @@ class CounterApi {
           headers: {'Content-Type': 'application/json'});
     });
 
+    router.get('/set/<number|[0-9]+>', (Request request, String number) {
+      final parsedvalue = int.tryParse(number);
+
+      if (parsedvalue != null) {
+        value= parsedvalue;
+        return Response.ok(json.encode(value),
+            headers: {'Content-Type': 'application/json'});
+      }
+
+      return Response.notFound('Film not found.');
+    });
+
     router.get('/json', (Request request) async {
       return Response.ok(json.encode("counter:"+value.toString()),
           headers: {'Content-Type': 'application/json'});
