@@ -41,7 +41,7 @@ class CounterApi {
     });
 
     router.get('/json', (Request request) async {
-      return Response.ok(json.encode("counter:"+value.toString()),
+      return Response.ok(json.encode("counter: "+value.toString()),
           headers: {'Content-Type': 'application/json'});
     });
     return router;
