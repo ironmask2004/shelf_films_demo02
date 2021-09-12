@@ -7,7 +7,7 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 
 
-const String HostServer = '192.168.0.3';
+const String HostServer = '192.168.1.5';
 const int HostPort = 8083;
 
 void main(List<String> arguments) async {
@@ -24,7 +24,8 @@ void main(List<String> arguments) async {
   });
 
   print('working server try:  ');
-  //await io.serve(app, '192.168.0.3, 8083);
+  //await io.serve(app, '192.168.0.3, 8083);curl  192.168.1.5:8083/films/2
+
   final handler = Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(handleCors())

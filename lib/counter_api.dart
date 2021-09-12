@@ -8,23 +8,24 @@ class CounterApi {
   Router get router {
     final router = Router();
     router.get('/', (Request request) {
-      return Response.ok(value.toString(),
+      return Response.ok(json.encode(value),
           headers: {'Content-Type': 'application/json'});
     });
 
     router.get('/inc', (Request request) {
       value++;
-      return Response.ok(value.toString(),
+      return Response.ok(json.encode(value),
           headers: {'Content-Type': 'application/json'});
     });
     router.get('/dec', (Request request) {
       value--;
-      return Response.ok(value.toString());
+      return Response.ok(json.encode(value) ,
+          headers: {'Content-Type': 'application/json'});
     });
 
     router.get('/reset', (Request request) {
       value = 0;
-      return Response.ok(value.toString(),
+      return Response.ok(json.encode(value),
           headers: {'Content-Type': 'application/json'});
     });
 
@@ -47,7 +48,7 @@ class CounterApi {
 
       if (parsedvalue != null) {
         value = parsedvalue;
-        return Response.ok(parsedvalue.toString(),
+        return Response.ok( json.encode(parsedvalue)  ,
             headers: {'Content-Type': 'application/json'});
       }
     });

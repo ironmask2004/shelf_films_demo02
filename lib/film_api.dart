@@ -19,7 +19,7 @@ class FilmApi {
       final parsedId = int.tryParse(id);
       final film =
           data.firstWhere((film) => film['id'] == parsedId, orElse: () => null);
-
+      print(film);
       if (film != null) {
         return Response.ok(json.encode(film),
             headers: {'Content-Type': 'application/json'});
