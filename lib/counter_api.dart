@@ -32,7 +32,7 @@ class CounterApi {
       final parsedvalue = int.tryParse(number);
 
       if (parsedvalue != null) {
-        value= parsedvalue;
+        value = parsedvalue;
         return Response.ok(json.encode(value),
             headers: {'Content-Type': 'application/json'});
       }
@@ -40,8 +40,20 @@ class CounterApi {
       return Response.notFound('Film not found.');
     });
 
+    router.post('/set/', (Request request) async {
+      final payload = await request.readAsString();
+      print("payload:" + json.decode(payload));
+      final parsedvalue = int.tryParse(payload);
+
+      if (parsedvalue != null) {
+        value = parsedvalue;
+        return Response.ok(payload,
+            headers: {'Content-Type': 'application/json'});
+      }
+    });
+
     router.get('/json', (Request request) async {
-      return Response.ok(json.encode("counter: "+value.toString()),
+      return Response.ok(json.encode("counter: " + value.toString()),
           headers: {'Content-Type': 'application/json'});
     });
     return router;
