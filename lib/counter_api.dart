@@ -28,7 +28,7 @@ class CounterApi {
           headers: {'Content-Type': 'application/json'});
     });
 
-    router.get('/set/<number|[0-9]+>', (Request request, String number) {
+    /*router.get('/set/<number|[0-9]+>', (Request request, String number) {
       final parsedvalue = int.tryParse(number);
 
       if (parsedvalue != null) {
@@ -39,15 +39,15 @@ class CounterApi {
 
       return Response.notFound('Film not found.');
     });
-
+*/
     router.post('/set/', (Request request) async {
       final payload = await request.readAsString();
-      print("payload:" + json.decode(payload));
-      final parsedvalue = int.tryParse(payload);
+     print( json.decode(payload).toString());
+      final parsedvalue = int.tryParse(json.decode(payload)["counter"]);
 
       if (parsedvalue != null) {
         value = parsedvalue;
-        return Response.ok(payload,
+        return Response.ok(parsedvalue.toString(),
             headers: {'Content-Type': 'application/json'});
       }
     });

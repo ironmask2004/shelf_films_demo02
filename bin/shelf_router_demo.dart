@@ -27,7 +27,6 @@ void main(List<String> arguments) async {
       .addMiddleware(handleCors())
       .addMiddleware(handleAuth(secret))
       .addHandler(app);
-
   print (" curl  localhost:8083/films/2");
   await io.serve(handler, 'localhost', 8083);
 }
