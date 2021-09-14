@@ -11,7 +11,8 @@ dependencies:
   envify: ^2.0.0
   redis: ^2.0.0
   uuid: ^3.0.0
-
+  sqlite3: ^1.1.2
+  path:
 
 dev_dependencies: 
   pedantic: ^1.11.1
