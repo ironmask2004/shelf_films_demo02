@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf/shelf.dart';
 
-class FilmApi {
+class FilmSqlApi {
   final List data = json.decode(File('films.json').readAsStringSync());
 
   Router get router {
@@ -25,7 +25,7 @@ class FilmApi {
             headers: {'Content-Type': 'application/json'});
       }
 
-      return Response.notFound('Film not found.');
+      return Response.notFound('FilmSql not found.');
     });
 
     router.post('/', (Request request) async {
@@ -35,21 +35,10 @@ class FilmApi {
           headers: {'Content-Type': 'application/json'});
     });
 
-    router.get('/delete/<id>', (Request request, String id) {
+    router.delete('/<id>', (Request request, String id) {
       final parsedId = int.tryParse(id);
       data.removeWhere((film) => film['id'] == parsedId);
       return Response.ok('Deleted.');
-    });
-
-
-    router.delete('/', (Request request) async {
-      final payload = await request.readAsString();
-      final int parsedId= await jsonDecode(payload)['id'];
-      print( 'Going to delete ID:'+ parsedId.toString());
-      data.removeWhere((film) => film['id'] == parsedId);
-     // data.add(json.decode(payload));
-      return Response.ok(payload +'Deleted',
-          headers: {'Content-Type': 'application/json'});
     });
 
 
