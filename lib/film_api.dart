@@ -24,7 +24,6 @@ class FilmApi {
         return Response.ok(json.encode(film),
             headers: {'Content-Type': 'application/json'});
       }
-
       return Response.notFound('Film not found.');
     });
 

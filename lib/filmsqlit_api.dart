@@ -14,61 +14,73 @@ import 'film_class.dart';
 
 class FilmSqlApi {
   final List data = json.decode(File('films.json').readAsStringSync());
-  late final database ;
+  late final database;
   FilmSqlApi() {
     print('------------');
-    print('Films Sql Data');
-    print(data.runtimeType);
-    print(data.toString());
-    print(data[0]);
-    print(data[0].runtimeType);
-    print(data[0]['title']);
-    //print(data[1]['title']);
-    print('------------');
-
-
     open_filmsDB();
     print('Using sqlite3 ${sqlite3.version}');
   }
 
-  open_filmsDB(){
-
-    open.overrideFor(OperatingSystem.linux, _openOnLinux);
-    // After setting all the overrides, you can use moor!
+  open_filmsDB() {
+    open.overrideFor(OperatingSystem.linux, _openSqlit3OnLinux);
     database = sqlite3.openInMemory();
-    var stmt = database.prepare('CREATE TABLE film(id INTEGER PRIMARY KEY, title TEXT)' );
+    var stmt = database
+        .prepare('CREATE TABLE film(id INTEGER PRIMARY KEY, title TEXT)');
     stmt.execute();
     print('created table film');
-    // Dispose a statement when you don't need it anymore to clean up resources.
+
     stmt.dispose();
 
     stmt = database.prepare('INSERT INTO film (id, title) VALUES (?,?)');
-    stmt.execute([1, 'The Beatles1']);
-    stmt.execute([2, 'The Beatles2']);
-    stmt.execute([3, 'The Beatles3']);
+    data.forEach((element) => stmt.execute([element['id'], element['title']]));
+    stmt.execute([999, 'The Test Film 999']);
 
-    // Dispose a statement when you don't need it anymore to clean up resources.
     stmt.dispose();
-
-
-//    final ResultSet resultSet = database.select('SELECT * FROM film WHERE name LIKE ?', ['The %']);
-    final ResultSet resultSet =database.select('SELECT * FROM film ');
+    // final ResultSet resultSet = database.select('SELECT * FROM film WHERE name LIKE ?', ['The %']);
+    final ResultSet resultSet = database.select('SELECT * FROM film ');
     resultSet.forEach((element) {
       print(element);
     });
-    for (final Row row in resultSet) {
-      print('last rec : Film [id: ${row['id']}, title: ${row['title']}]');
-    }
-
+    //for (final Row row in resultSet) {
+    //  print('Film [id: ${row['id']}, title: ${row['title']}]');
+    // }
   }
 
-  DynamicLibrary _openOnLinux() {
+  String findFilm(final int filmID) {
+    final ResultSet resultSet =
+        database.select('SELECT * FROM film WHERE id = ' + filmID.toString());
+    if (resultSet.isNotEmpty) {
+      final Film foundfilm =
+          new Film(id: resultSet.first['id'], title: resultSet.first['title']);
+      return (foundfilm.toString());
+    } else {
+      return ("Not Found!!");
+    }
+  }
+
+  String DeleteFilm(final int filmID) {
+    print('delete  FROM film WHERE id = ' + filmID.toString());
+    var stmt =
+        database.prepare('delete  FROM film WHERE id = ' + filmID.toString());
+    var execute;
+    execute = stmt.execute();
+    stmt.dispose();
+    print("value of excute  delete : ");
+     print( execute);
+
+   // if (execute) {
+      return (filmID.toString());
+   // } else {
+   //   return ("Not Found!!");
+   // }
+  }
+
+  DynamicLibrary _openSqlit3OnLinux() {
     final scriptDir = File(Platform.script.toFilePath()).parent;
     print(scriptDir);
     final libraryNextToScript = File('${scriptDir.path}/libsqlite3.so');
     return DynamicLibrary.open(libraryNextToScript.path);
   }
-
 
   Router get router {
     final router = Router();
@@ -79,24 +91,18 @@ class FilmSqlApi {
 
     router.get('/<id|[0-9]+>', (Request request, String id) {
       final parsedId = int.tryParse(id);
-      final film =
-          data.firstWhere((film) => film['id'] == parsedId, orElse: () => null);
-      print(film);
-      if (film != null) {
-        return Response.ok(json.encode(film),
-            headers: {'Content-Type': 'application/json'});
-      }
-
-      return Response.notFound('FilmSql not found.');
+      // final film = data.firstWhere((film) => film['id'] == parsedId, orElse: () => null);
+      final film = findFilm(parsedId!);
+      print('------- find film:' + id + '---- ' + film);
+      return Response.ok(film, headers: {'Content-Type': 'application/json'});
     });
 
     router.post('/', (Request request) async {
       final payload = await request.readAsString();
       data.add(json.decode(payload));
-     var film0 = Film(
-        id:await jsonDecode(payload)['id'] ,
-         title: await jsonDecode(payload)['title']
-      );
+      var film0 = Film(
+          id: await jsonDecode(payload)['id'],
+          title: await jsonDecode(payload)['title']);
       // await insertFilm(film0);
 
       return Response.ok(payload,
@@ -113,7 +119,8 @@ class FilmSqlApi {
       final payload = await request.readAsString();
       final int parsedId = await jsonDecode(payload)['id'];
       print('Going to delete ID:' + parsedId.toString());
-      data.removeWhere((film) => film['id'] == parsedId);
+      //data.removeWhere((film) => film['id'] == parsedId);
+      String result = DeleteFilm(parsedId);
 
       return Response.ok(payload + 'Deleted',
           headers: {'Content-Type': 'application/json'});

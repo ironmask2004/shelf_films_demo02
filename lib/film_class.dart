@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class Film {
   final int id;
   final String title;
@@ -8,14 +10,13 @@ class Film {
   });
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title
-    };
+    return {'id': id, 'title': title};
   }
 
   @override
   String toString() {
-    return 'film{id: $id, name: $title}';
+    return "{\"id\":$id,\"title\":\"$title\"}";
   }
 }
+
+
