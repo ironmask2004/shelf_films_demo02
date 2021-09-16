@@ -25,20 +25,25 @@ class FilmSqlApi {
 
   open_filmsDB() {
     open.overrideFor(OperatingSystem.linux, _openSqlit3OnLinux);
-    database = sqlite3.openInMemory();
-    var stmt = database
-        .prepare('CREATE TABLE film(id INTEGER PRIMARY KEY, title TEXT)');
-    stmt.execute();
-    print('created table film');
+    //database = sqlite3.openInMemory();
+    database = sqlite3.open('films_databse.db');
+    try {
+      var stmt = database
+          .prepare('CREATE TABLE film(id INTEGER PRIMARY KEY, title TEXT)');
+      stmt.execute();
+      print('created table film');
 
-    stmt.dispose();
+      stmt.dispose();
+      stmt = database.prepare('INSERT INTO film (id, title) VALUES (?,?)');
+      json
+          .decode(File('films.json').readAsStringSync())
+          .forEach((film) => stmt.execute([film['id'], film['title']]));
 
-    stmt = database.prepare('INSERT INTO film (id, title) VALUES (?,?)');
-    json
-        .decode(File('films.json').readAsStringSync())
-        .forEach((film) => stmt.execute([film['id'], film['title']]));
+      stmt.dispose();
+    } catch (error) {
+      print(' Table Film Already exist ' + error.toString());
+    }
 
-    stmt.dispose();
     // final ResultSet resultSet = database.select('SELECT * FROM film WHERE name LIKE ?', ['The %']);
     /*  final ResultSet resultSet = database.select('SELECT * FROM film ');
     resultSet.forEach((element) {
