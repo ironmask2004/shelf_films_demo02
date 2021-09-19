@@ -19,7 +19,7 @@ class CounterApi {
     });
     router.get('/dec', (Request request) {
       value--;
-      return Response.ok(json.encode(value) ,
+      return Response.ok(json.encode(value),
           headers: {'Content-Type': 'application/json'});
     });
 
@@ -43,12 +43,12 @@ class CounterApi {
 */
     router.post('/set/', (Request request) async {
       final payload = await request.readAsString();
-     print( json.decode(payload).toString());
-      final parsedvalue = int.tryParse(json.decode(payload)["counter"]);
+      print(json.decode(payload).toString());
+      final parsedvalue = int.tryParse(json.decode(payload)['counter']);
 
       if (parsedvalue != null) {
         value = parsedvalue;
-        return Response.ok( json.encode(parsedvalue)  ,
+        return Response.ok(json.encode(parsedvalue),
             headers: {'Content-Type': 'application/json'});
       }
     });
